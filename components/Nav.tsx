@@ -25,25 +25,25 @@ export default function Nav() {
     <header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-500"
       style={{
-        backgroundColor: scrolled ? "rgba(247,238,222,0.88)" : "transparent",
+        backgroundColor: scrolled ? "rgba(243,232,208,0.9)" : "transparent",
         backdropFilter: scrolled ? "blur(10px)" : "none",
         borderBottom: scrolled ? "1px solid var(--line)" : "1px solid transparent",
       }}
     >
       <div className="mx-auto max-w-[1320px] px-5 sm:px-8 flex items-center justify-between h-[74px]">
         <a href="#top" className="flex flex-col leading-none">
-          <span className="font-display text-2xl text-ink">{resto.name}</span>
-          <span className="font-display text-[0.56rem] font-semibold uppercase tracking-[0.22em] text-terracotta mt-0.5">
+          <span className="font-script text-3xl text-ink leading-none">{resto.name}</span>
+          <span className="font-display text-[0.54rem] font-bold uppercase tracking-[0.24em] text-rosso mt-0.5">
             {resto.tagline}
           </span>
         </a>
 
-        <nav className="hidden md:flex items-center gap-9">
+        <nav className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="link-u font-display text-sm font-medium text-ink-soft hover:text-ink transition-colors"
+              className="link-u font-display text-xs font-bold uppercase tracking-[0.14em] text-ink-soft hover:text-ink transition-colors"
             >
               {l.label}
             </a>

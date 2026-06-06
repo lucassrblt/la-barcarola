@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Newsreader } from "next/font/google";
+import { Fraunces, Newsreader, Dancing_Script } from "next/font/google";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -13,6 +13,13 @@ const newsreader = Newsreader({
   variable: "--font-newsreader",
   style: ["normal", "italic"],
   subsets: ["latin"],
+  display: "swap",
+});
+
+const dancing = Dancing_Script({
+  variable: "--font-dancing",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -34,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${fraunces.variable} ${newsreader.variable} h-full`}
+      className={`${fraunces.variable} ${newsreader.variable} ${dancing.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

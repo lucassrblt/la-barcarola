@@ -1,34 +1,37 @@
 @import "tailwindcss";
 
 /* ============================================================
-   LA BARCAROLA — trattoria franco-italienne
-   Méditerranéen chic : ivoire chaud, basilic profond, terracotta,
-   touches d'olive et d'ocre. Fraunces (display serif) × Newsreader.
+   LA BARCAROLA — Osteria Vintage (raffiné)
+   Papier chaud, rouge osteria, vert bouteille, ocre laiton.
+   Fraunces (display) × Newsreader (corps) × Dancing Script (accents).
    ============================================================ */
 
 :root {
-  --cream: #f5eddd;
-  --cream-2: #eaddc6;
-  --basil: #1d3329;
-  --basil-2: #2a4a3a;
-  --ink: #2a201a;
-  --ink-soft: #6c5a48;
-  --terracotta: #c0552f;
-  --terracotta-bright: #d76a40;
+  --cream: #f3e8d0;
+  --cream-2: #e8d6b4;
+  --paper: #f7efdd;
+  --rosso: #9e2b25;
+  --rosso-bright: #b8392f;
+  --verde: #1f4031;
+  --verde-2: #2a4a38;
+  --ink: #2a211a;
+  --ink-soft: #6b5a48;
+  --gold: #b9842f;
   --olive: #6f7339;
-  --gold: #c0883e;
-  --line: rgba(42, 32, 26, 0.16);
-  --line-cream: rgba(245, 237, 221, 0.16);
+  --line: rgba(42, 33, 26, 0.18);
+  --line-cream: rgba(243, 232, 208, 0.18);
 }
 
 @theme inline {
   --color-cream: var(--cream);
   --color-cream-2: var(--cream-2);
-  --color-basil: var(--basil);
-  --color-basil-2: var(--basil-2);
+  --color-paper: var(--paper);
+  --color-rosso: var(--rosso);
+  --color-rosso-bright: var(--rosso-bright);
+  --color-verde: var(--verde);
+  --color-verde-2: var(--verde-2);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
-  --color-terracotta: var(--terracotta);
   --color-gold: var(--gold);
   --color-olive: var(--olive);
   --color-line: var(--line);
@@ -36,6 +39,7 @@
 
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-body: var(--font-newsreader), Georgia, serif;
+  --font-script: var(--font-dancing), "Brush Script MT", cursive;
 }
 
 * {
@@ -51,65 +55,76 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  /* halo papier chaud */
+  background-image:
+    radial-gradient(120% 90% at 50% -10%, rgba(185, 132, 47, 0.1), transparent 55%),
+    radial-gradient(80% 70% at 100% 100%, rgba(31, 64, 49, 0.06), transparent 50%);
 }
 ::selection {
-  background: var(--terracotta);
+  background: var(--rosso);
   color: var(--cream);
 }
 
-/* Grain */
+/* Grain papier */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 100;
   pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ---------- Typo ---------- */
 .font-display {
   font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
 .font-body {
   font-family: var(--font-body);
 }
+.font-script {
+  font-family: var(--font-script);
+  font-weight: 600;
+  letter-spacing: 0;
+}
 .eyebrow {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--terracotta);
+  color: var(--rosso);
 }
 .display-xl {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(3.4rem, 10vw, 9rem);
+  font-weight: 800;
+  font-size: clamp(2.8rem, 6.4vw, 6rem);
   line-height: 0.94;
   letter-spacing: -0.015em;
+  text-transform: uppercase;
 }
 .display-lg {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
   line-height: 0.98;
   letter-spacing: -0.012em;
 }
 .display-md {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.9rem, 4vw, 3.2rem);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 4vw, 3rem);
   line-height: 1.02;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.008em;
 }
-.serif-accent {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-weight: 400;
+.script-accent {
+  font-family: var(--font-script);
+  font-weight: 600;
+  color: var(--gold);
 }
 
 /* ---------- Boutons ---------- */
@@ -118,30 +133,42 @@ body::before {
   align-items: center;
   gap: 0.55rem;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.82rem;
-  letter-spacing: 0.01em;
-  padding: 0.95rem 1.8rem;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.7rem;
   border-radius: 2px;
-  background: var(--terracotta);
+  background: var(--rosso);
   color: var(--cream);
-  border: 1px solid var(--terracotta);
-  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border: 1px solid var(--rosso);
+  box-shadow: 0 1px 0 rgba(42, 33, 26, 0.18);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .btn:hover {
-  background: var(--terracotta-bright);
-  border-color: var(--terracotta-bright);
+  background: var(--rosso-bright);
+  border-color: var(--rosso-bright);
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px -8px rgba(158, 43, 37, 0.6);
 }
 .btn-ghost {
   background: transparent;
   color: currentColor;
   border-color: currentColor;
-  opacity: 0.85;
+  box-shadow: none;
+  opacity: 0.9;
 }
 .btn-ghost:hover {
   opacity: 1;
   transform: translateY(-2px);
+}
+.btn-verde {
+  background: var(--verde);
+  border-color: var(--verde);
+}
+.btn-verde:hover {
+  background: var(--verde-2);
+  border-color: var(--verde-2);
 }
 
 .link-u {
@@ -154,7 +181,7 @@ body::before {
   bottom: -2px;
   width: 100%;
   height: 1px;
-  background: var(--terracotta);
+  background: var(--rosso);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -164,35 +191,130 @@ body::before {
   transform-origin: left;
 }
 
-/* ---------- Photo slot ---------- */
-.dish-slot {
+/* ---------- Filet ornemental ---------- */
+.rule {
+  height: 1px;
+  background: var(--line);
+}
+.rule-fancy {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--gold);
+}
+.rule-fancy::before,
+.rule-fancy::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+.rule-fancy span {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+}
+
+/* ---------- Sceau / tampon ---------- */
+.stamp {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 999px;
+  color: var(--rosso);
+  border: 2px solid var(--rosso);
+  box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 4px var(--rosso);
+  transform: rotate(-9deg);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  background: var(--cream);
+}
+.stamp--cream {
+  color: var(--cream);
+  border-color: var(--cream);
+  box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 4px var(--cream);
+}
+.stamp b {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.stamp small {
+  display: block;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  margin-top: 0.15rem;
+}
+
+/* ---------- Cadre vintage ---------- */
+.vintage-frame {
   position: relative;
+  padding: 0.5rem;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 0 1px var(--cream), inset 0 0 0 2px var(--line);
+}
+
+/* ---------- Placeholder photo (asset manquant) ---------- */
+.ph {
+  position: relative;
+  overflow: hidden;
   background:
-    radial-gradient(80% 80% at 30% 25%, rgba(192, 85, 47, 0.16), transparent 60%),
-    radial-gradient(70% 70% at 80% 90%, rgba(111, 115, 57, 0.18), transparent 55%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(107, 90, 72, 0.06) 0 10px,
+      transparent 10px 20px
+    ),
     linear-gradient(160deg, var(--cream-2), var(--cream));
   border: 1px solid var(--line);
-  overflow: hidden;
+  display: grid;
+  place-items: center;
 }
-.dish-slot::after {
-  content: attr(data-label);
-  position: absolute;
-  bottom: 0.9rem;
-  left: 0.9rem;
+.ph__label {
+  text-align: center;
+  padding: 1rem;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--ink-soft);
+}
+.ph__kicker {
+  display: inline-block;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rosso);
+  border: 1px solid var(--rosso);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.ph__name {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ph__key {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  opacity: 0.7;
 }
 
 /* tag régime */
 .tag {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.58rem;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
@@ -224,9 +346,7 @@ body::before {
   html {
     scroll-behavior: auto;
   }
-}
-
-.rule {
-  height: 1px;
-  background: var(--line);
+  .stamp {
+    transform: none;
+  }
 }

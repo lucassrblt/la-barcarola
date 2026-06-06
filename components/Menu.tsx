@@ -38,8 +38,8 @@ export default function Menu() {
               className="px-4 py-2 font-display text-sm font-medium transition-all duration-300"
               style={{
                 color: active ? "var(--cream)" : "var(--ink)",
-                backgroundColor: active ? "var(--basil)" : "transparent",
-                border: `1px solid ${active ? "var(--basil)" : "var(--line)"}`,
+                backgroundColor: active ? "var(--verde)" : "transparent",
+                border: `1px solid ${active ? "var(--verde)" : "var(--line)"}`,
                 borderRadius: "2px",
               }}
             >
@@ -63,9 +63,9 @@ export default function Menu() {
               onClick={() => toggleDiet(t)}
               className="tag transition-all duration-200"
               style={{
-                backgroundColor: active ? "var(--terracotta)" : "transparent",
+                backgroundColor: active ? "var(--rosso)" : "transparent",
                 color: active ? "var(--cream)" : "var(--ink-soft)",
-                borderColor: active ? "var(--terracotta)" : "var(--line)",
+                borderColor: active ? "var(--rosso)" : "var(--line)",
               }}
             >
               {t}
@@ -75,7 +75,7 @@ export default function Menu() {
         {diets.length > 0 && (
           <button
             onClick={() => setDiets([])}
-            className="font-display text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-terracotta ml-1 link-u"
+            className="font-display text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-rosso ml-1 link-u"
           >
             Réinitialiser
           </button>
@@ -98,7 +98,7 @@ export default function Menu() {
               <div className="flex items-baseline gap-2 flex-wrap">
                 <h4 className="font-display text-xl font-semibold text-ink">{d.name}</h4>
                 {d.signature && (
-                  <span className="font-display text-[0.55rem] font-bold uppercase tracking-[0.1em] text-terracotta border border-terracotta rounded-full px-2 py-0.5">
+                  <span className="font-display text-[0.55rem] font-bold uppercase tracking-[0.1em] text-rosso border border-rosso rounded-full px-2 py-0.5">
                     Signature
                   </span>
                 )}
@@ -114,7 +114,7 @@ export default function Menu() {
               className="shrink-0 border-b border-dotted border-ink-soft/40 flex-1 mx-1 self-end mb-2 hidden sm:block"
               aria-hidden
             />
-            <span className="font-display text-lg font-semibold text-basil shrink-0">
+            <span className="font-display text-lg font-bold text-rosso shrink-0">
               {eur(d.price)}
             </span>
           </div>
