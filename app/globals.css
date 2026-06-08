@@ -354,6 +354,64 @@ body::before {
   animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Zoom lent type « Ken Burns » (photos d'ambiance) */
+@keyframes kenburns {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.09);
+  }
+}
+.kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+/* Flottement doux (tampon « Ouvert ») */
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(2deg);
+  }
+}
+.stamp-float {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* Apparition au changement d'onglet (carte) */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-rise {
+  animation: fade-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Lenis (smooth scroll) ---------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     animation: none;
@@ -364,5 +422,10 @@ body::before {
   }
   .stamp {
     transform: none;
+  }
+  .kenburns,
+  .stamp-float,
+  .fade-rise {
+    animation: none;
   }
 }

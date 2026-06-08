@@ -1,120 +1,78 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { menu, categories, dietTags, type DietTag } from "@/lib/data";
+import { menu, type Dish } from "@/lib/data";
 
 const eur = (n: number) => `${n} €`;
 
+/* Aperçu : on n'affiche jamais plus de 5 plats à la fois (le reste via
+   « Voir la carte complète »). */
+const MAX_VISIBLE = 5;
+
+/* Onglets fidèles au mock : catégories FR + régimes, dans une seule barre. */
+const filters: { label: string; match: (d: Dish) => boolean }[] = [
+  { label: "Tout", match: () => true },
+  { label: "Pizzas", match: (d) => d.category === "Pizze" },
+  { label: "Pâtes", match: (d) => d.category === "Pasta" },
+  { label: "Viandes", match: (d) => d.category === "Secondi" },
+  { label: "Halal", match: (d) => d.tags.includes("Halal") },
+  { label: "Végétarien", match: (d) => d.tags.includes("Végétarien") },
+];
+
 export default function Menu() {
-  const [cat, setCat] = useState<(typeof categories)[number]>(categories[0]);
-  const [diets, setDiets] = useState<DietTag[]>([]);
+  const [active, setActive] = useState(1); // "Pizzas" par défaut (aperçu court)
 
-  const toggleDiet = (t: DietTag) =>
-    setDiets((d) => (d.includes(t) ? d.filter((x) => x !== t) : [...d, t]));
-
-  const dishes = useMemo(
-    () =>
-      menu.filter(
-        (d) =>
-          d.category === cat &&
-          diets.every((t) => d.tags.includes(t)),
-      ),
-    [cat, diets],
-  );
-
-  const countFor = (c: (typeof categories)[number]) =>
-    menu.filter((d) => d.category === c && diets.every((t) => d.tags.includes(t))).length;
+  const dishes = useMemo(() => menu.filter(filters[active].match), [active]);
+  const visible = dishes.slice(0, MAX_VISIBLE);
 
   return (
     <div>
-      {/* Onglets catégories */}
-      <div className="flex flex-wrap justify-center gap-2 border-b border-line pb-5">
-        {categories.map((c) => {
-          const active = c === cat;
+      {/* Onglets texte soulignés */}
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 border-b border-line pb-4">
+        {filters.map((f, i) => {
+          const on = i === active;
           return (
             <button
-              key={c}
-              onClick={() => setCat(c)}
-              className="px-4 py-2 font-display text-sm font-medium transition-all duration-300"
-              style={{
-                color: active ? "var(--cream)" : "var(--ink)",
-                backgroundColor: active ? "var(--verde)" : "transparent",
-                border: `1px solid ${active ? "var(--verde)" : "var(--line)"}`,
-                borderRadius: "2px",
-              }}
+              key={f.label}
+              onClick={() => setActive(i)}
+              className="relative pb-1 font-display text-[0.82rem] font-bold uppercase tracking-[0.12em] transition-colors"
+              style={{ color: on ? "var(--rosso)" : "var(--ink)" }}
             >
-              {c}
-              <span className="ml-2 opacity-60">{countFor(c)}</span>
+              {f.label}
+              <span
+                className="absolute left-0 -bottom-[1px] h-[2px] bg-rosso transition-all duration-300"
+                style={{ width: on ? "100%" : "0%" }}
+              />
             </button>
           );
         })}
       </div>
 
-      {/* Filtres régime */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
-        <span className="font-display text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink-soft mr-1">
-          Filtrer :
-        </span>
-        {dietTags.map((t) => {
-          const active = diets.includes(t);
-          return (
-            <button
-              key={t}
-              onClick={() => toggleDiet(t)}
-              className="tag transition-all duration-200"
-              style={{
-                backgroundColor: active ? "var(--rosso)" : "transparent",
-                color: active ? "var(--cream)" : "var(--ink-soft)",
-                borderColor: active ? "var(--rosso)" : "var(--line)",
-              }}
-            >
-              {t}
-            </button>
-          );
-        })}
-        {diets.length > 0 && (
-          <button
-            onClick={() => setDiets([])}
-            className="font-display text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-rosso ml-1 link-u"
-          >
-            Réinitialiser
-          </button>
-        )}
-      </div>
-
-      {/* Plats */}
-      <div className="mt-8 grid gap-y-1">
+      {/* Liste des plats (padding droit sur xl pour laisser place à la pizza) */}
+      <div key={active} className="fade-rise mt-6 xl:pr-40">
         {dishes.length === 0 && (
-          <p className="font-body italic text-ink-soft py-8">
-            Aucun plat ne correspond à ces filtres dans cette catégorie.
+          <p className="font-body italic text-ink-soft py-8 text-center">
+            Aucun plat ne correspond à ce filtre.
           </p>
         )}
-        {dishes.map((d) => (
+        {visible.map((d, i) => (
           <div
             key={d.id}
-            className="py-4 border-b border-line/70 flex items-baseline gap-3 group"
+            className="py-4"
+            style={{ borderTop: i === 0 ? "none" : "1px solid var(--line)" }}
           >
-            <div className="flex-1">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <h4 className="font-display text-xl font-semibold text-ink">{d.name}</h4>
-                {d.signature && (
-                  <span className="font-display text-[0.55rem] font-bold uppercase tracking-[0.1em] text-rosso border border-rosso rounded-full px-2 py-0.5">
-                    Signature
-                  </span>
-                )}
-                {d.tags.map((t) => (
-                  <span key={t} className="tag">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-1 font-body text-ink-soft leading-snug">{d.desc}</p>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h4 className="font-display text-lg font-bold uppercase tracking-[0.02em] text-ink">
+                {d.name}
+              </h4>
+              {d.signature && (
+                <span className="font-display text-[0.5rem] font-bold uppercase tracking-[0.1em] text-rosso border border-rosso rounded-full px-2 py-0.5">
+                  Signature
+                </span>
+              )}
             </div>
-            <div
-              className="shrink-0 border-b border-dotted border-ink-soft/40 flex-1 mx-1 self-end mb-2 hidden sm:block"
-              aria-hidden
-            />
-            <span className="font-display text-lg font-bold text-rosso shrink-0">
+            <p className="mt-1 font-body text-ink-soft leading-snug">{d.desc}</p>
+            <span className="mt-1.5 block font-display text-base font-bold text-rosso">
               {eur(d.price)}
             </span>
           </div>

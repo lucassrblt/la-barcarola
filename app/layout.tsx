@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Newsreader, Dancing_Script } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -25,7 +26,11 @@ const dancing = Dancing_Script({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://la-barcarola.demo"),
-  title: "La Barcarola — Trattoria franco-italienne · Asnières-sur-Seine",
+  title: {
+    default: "La Barcarola — Trattoria franco-italienne à Asnières-sur-Seine",
+    template: "%s · La Barcarola",
+  },
+  applicationName: "La Barcarola",
   description:
     "Cuisine franco-italienne faite maison à Asnières-sur-Seine : pâtes fraîches, pizze au four, options halal & végétariennes. Découvrez la carte et réservez votre table. (Refonte concept — site de démonstration.)",
   openGraph: {
@@ -43,7 +48,10 @@ export default function RootLayout({
       lang="fr"
       className={`${fraunces.variable} ${newsreader.variable} ${dancing.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }

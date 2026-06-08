@@ -6,10 +6,12 @@ export default function Reveal({
   children,
   delay = 0,
   className = "",
+  id,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
+  id?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -38,6 +40,7 @@ export default function Reveal({
   return (
     <div
       ref={ref}
+      id={id}
       className={className}
       style={{
         opacity: shown ? 1 : 0,

@@ -1,109 +1,112 @@
+import { existsSync } from "fs";
+import { join } from "path";
+
+import Image from "next/image";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import Menu from "@/components/Menu";
-import ReservationForm from "@/components/ReservationForm";
+import Reserve from "@/components/Reserve";
+import Photo from "@/components/Photo";
 import Placeholder from "@/components/Placeholder";
-import { chef, ambiance, hours, reviews, resto, menu } from "@/lib/data";
+import CircularBadge from "@/components/CircularBadge";
+import { reviews, resto } from "@/lib/data";
 
-const signatures = menu.filter((d) => d.signature);
-const ambianceShots = ambiance.map((label, i) => ({
-  label,
-  key: `photo-ambiance-${i + 1}`,
-}));
+/* Vrai asset si présent dans /public, sinon placeholder (le client fournira
+   les affiches Campari/Cinzano et la photo de pizza). */
+const hasAsset = (p: string) => existsSync(join(process.cwd(), "public", p));
 
-/* Petites icônes de trait pour le bandeau (assets réels, pas placeholders). */
+/* Petites icônes de trait pour le bandeau. */
 const banderoles = [
-  {
-    label: "Pizze au four",
-    icon: (
-      <path d="M12 3 3 20h18L12 3Z M12 11v0 M9.5 15v0 M14 14v0" />
-    ),
-  },
-  {
-    label: "Pâtes fraîches",
-    icon: <path d="M4 5c4 2 12 2 16 0 M4 12c4 2 12 2 16 0 M4 19c4 2 12 2 16 0" />,
-  },
-  {
-    label: "Halal",
-    icon: <path d="M15.5 5a7 7 0 1 0 0 14 8 8 0 1 1 0-14Z" />,
-  },
-  {
-    label: "Végétarien",
-    icon: <path d="M20 4C9 4 4 11 4 20c9 0 16-5 16-16Z M9 15c3-3 6-5 9-6" />,
-  },
+  { label: "Pizze au four", icon: <path d="M12 3 3 20h18L12 3Z M12 11v0 M9.5 15v0 M14 14v0" /> },
+  { label: "Pâtes fraîches", icon: <path d="M4 5c4 2 12 2 16 0 M4 12c4 2 12 2 16 0 M4 19c4 2 12 2 16 0" /> },
+  { label: "Halal", icon: <path d="M15.5 5a7 7 0 1 0 0 14 8 8 0 1 1 0-14Z" /> },
+  { label: "Végétarien", icon: <path d="M20 4C9 4 4 11 4 20c9 0 16-5 16-16Z M9 15c3-3 6-5 9-6" /> },
 ];
+
+const featured = reviews[0];
 
 export default function Home() {
   return (
     <div id="top" className="flex flex-col flex-1">
       <Nav />
 
-      {/* ============ HERO (papier) ============ */}
-      <section className="relative min-h-screen flex items-center bg-cream text-ink overflow-hidden">
-        <div className="relative mx-auto max-w-[1320px] w-full px-5 sm:px-8 pt-32 pb-16 grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7">
-            <div className="reveal eyebrow" style={{ animationDelay: "0.05s" }}>
-              {resto.tagline} · {resto.area}
-            </div>
-            <h1 className="mt-5 display-xl">
-              <span className="reveal block" style={{ animationDelay: "0.12s", color: "var(--rosso)" }}>
-                Benvenuti
-              </span>
-              <span
-                className="reveal block"
-                style={{ animationDelay: "0.22s", color: "var(--verde)" }}
+      {/* ============ HERO ============ */}
+      <section className="relative bg-cream text-ink overflow-hidden pt-[120px] sm:pt-[140px]">
+        <div className="grid lg:grid-cols-2 min-h-[78vh]">
+          {/* Texte */}
+          <div className="flex items-center px-5 sm:px-8">
+            <div className="ml-auto w-full max-w-[600px] py-12 lg:py-16">
+              <h1 className="display-xl">
+                <span className="reveal block" style={{ animationDelay: "0.08s", color: "var(--rosso)" }}>
+                  Benvenuti
+                </span>
+                <span className="reveal block" style={{ animationDelay: "0.18s" }}>
+                  <span style={{ color: "var(--olive)" }}>A </span>
+                  <span style={{ color: "var(--rosso)" }}>La Barcarola</span>
+                </span>
+              </h1>
+
+              <p
+                className="reveal mt-6 font-script text-3xl sm:text-4xl text-ink flex items-end gap-3"
+                style={{ animationDelay: "0.3s" }}
               >
-                à La Barcarola
-              </span>
-            </h1>
-            <p
-              className="reveal mt-5 font-script text-3xl sm:text-4xl"
-              style={{ animationDelay: "0.32s", color: "var(--gold)" }}
-            >
-              Cucina fatta in casa, con amore.
-            </p>
-            <p
-              className="reveal mt-6 max-w-md font-body text-lg text-ink-soft leading-relaxed"
-              style={{ animationDelay: "0.42s" }}
-            >
-              Pizze au four, pâtes fraîches et recettes franco-italiennes —
-              l’envie simple de recevoir comme à la maison, au cœur d’Asnières.
-            </p>
-            <div
-              className="reveal mt-9 flex flex-wrap items-center gap-3"
-              style={{ animationDelay: "0.52s" }}
-            >
-              <a href="#reserver" className="btn">
-                Réserver une table
-              </a>
-              <a href="#carte" className="btn btn-ghost text-verde">
-                Voir la carte
-              </a>
-            </div>
-            <div
-              className="reveal mt-8 font-display text-[0.72rem] font-bold uppercase tracking-[0.18em] text-rosso"
-              style={{ animationDelay: "0.6s" }}
-            >
-              {resto.area} · {resto.address.split(",")[0]}
+                <span>Cucina fatta in casa,
+                  <br />con amore.</span>
+                <svg width="56" height="30" viewBox="0 0 56 30" fill="none" className="mb-1 shrink-0" aria-hidden>
+                  <path
+                    d="M2 10c14 8 30 9 48 5"
+                    stroke="var(--ink)"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M50 15l4-1-3-3"
+                    stroke="var(--ink)"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </p>
+
+              <div
+                className="reveal mt-9 font-display text-base font-bold uppercase tracking-[0.12em] text-verde leading-snug"
+                style={{ animationDelay: "0.42s" }}
+              >
+                {resto.area}
+                <br />
+                {resto.address.split(",")[0]}
+              </div>
             </div>
           </div>
 
-          <div className="reveal lg:col-span-5" style={{ animationDelay: "0.4s" }}>
-            <div className="relative">
-              <div className="vintage-frame">
-                <Placeholder
-                  label="La façade & la terrasse"
-                  assetKey="photo-facade"
-                  ratio="4 / 5"
+          {/* Photo plein cadre */}
+          <div className="relative min-h-[46vh] lg:min-h-full">
+            {hasAsset("images/facade-terrasse.png") ? (
+              <Photo
+                src="/images/facade-terrasse.png"
+                alt="La façade verte et la terrasse de La Barcarola au crépuscule, tables à nappes vichy"
+                ratio="auto"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                className="absolute inset-0 h-full w-full"
+                imgClassName="kenburns"
+              />
+            ) : (
+              <Placeholder label="La façade & la terrasse" assetKey="photo-facade" className="absolute inset-0 h-full" />
+            )}
+
+            {/* Tampon Ouvert 7j/7 — chevauche la jointure texte/photo */}
+            <div className="absolute z-20 -top-12 right-6 lg:top-1/2 lg:right-auto lg:-left-16 lg:-translate-y-1/2">
+              <div className="stamp-float relative w-24 sm:w-28 lg:w-32 aspect-square rounded-full overflow-hidden shadow-[0_10px_28px_-12px_rgba(42,33,26,0.85)]">
+                <Image
+                  src="/images/stamp-ouvert.png"
+                  alt="Ouvert 7j/7, tous les jours"
+                  fill
+                  sizes="128px"
+                  className="object-cover scale-[1.04]"
                 />
-              </div>
-              <div className="absolute -top-5 -left-5">
-                <div className="stamp">
-                  <span>
-                    <small>Ouvert</small>
-                    <b>7j/7</b>
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -111,10 +114,10 @@ export default function Home() {
       </section>
 
       {/* ============ BANDEAU ============ */}
-      <div className="bg-rosso text-cream">
-        <div className="mx-auto max-w-[1320px] px-5 sm:px-8 py-4 flex flex-wrap items-center justify-center gap-x-9 gap-y-2 font-display text-sm font-semibold uppercase tracking-[0.08em]">
+      <div className="bg-rosso-bright text-cream">
+        <div className="mx-auto max-w-[1320px] px-5 sm:px-8 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 font-display text-sm font-bold uppercase tracking-[0.1em]">
           {banderoles.map((b, i) => (
-            <span key={b.label} className="flex items-center gap-x-9">
+            <span key={b.label} className="flex items-center gap-x-8">
               {i > 0 && <span className="text-cream/40">✦</span>}
               <span className="flex items-center gap-2">
                 <svg
@@ -139,42 +142,67 @@ export default function Home() {
       </div>
 
       {/* ============ CARTE ============ */}
-      <section id="carte" className="px-5 sm:px-8 py-24 sm:py-32">
+      <section id="carte" className="px-5 sm:px-8 py-20 sm:py-28">
         <div className="mx-auto max-w-[1320px]">
           <Reveal>
-            <div className="text-center">
-              <span className="eyebrow">01 — La carta</span>
-              <h2 className="display-md text-ink mt-2">La Carte</h2>
-              <p className="font-script text-2xl text-gold mt-1">
-                Pizze al forno, pasta fresca, dolci della casa.
-              </p>
-            </div>
-            <div className="rule-fancy max-w-xl mx-auto mt-5 mb-12">
+            <h2 className="display-md text-verde text-center">La Carte</h2>
+            <div className="rule-fancy max-w-xs mx-auto mt-4 mb-12">
               <span>✦</span>
             </div>
           </Reveal>
 
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
-            <Reveal className="hidden lg:block lg:col-span-3">
-              <Placeholder
-                label="Affiche apéritif (artwork original)"
-                assetKey="affiche-aperitivo-1"
-                kicker="Affiche vintage"
-                ratio="3 / 5"
-              />
+          <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,2fr)_minmax(0,0.85fr)] gap-6 lg:gap-8 items-start">
+            {/* Affiche gauche */}
+            <Reveal className="hidden lg:block group">
+              {hasAsset("images/affiche-campari.png") ? (
+                <Photo
+                  src="/images/affiche-campari.png"
+                  alt="Affiche vintage Campari"
+                  ratio="3 / 5"
+                  sizes="22vw"
+                  className="transition-transform duration-500 group-hover:-translate-y-1"
+                  imgClassName="transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+              ) : (
+                <Placeholder label="Affiche Campari" assetKey="affiche-campari" kicker="Affiche vintage" ratio="3 / 5" />
+              )}
             </Reveal>
-            <Reveal delay={80} className="lg:col-span-6">
-              <div className="vintage-frame p-4 sm:p-7">
+
+            {/* Menu + pizza (pizza contenue dans le panneau, comme le mockup) */}
+            <Reveal delay={80}>
+              <div className="vintage-frame p-4 sm:p-7 relative overflow-hidden">
                 <Menu />
+                {/* Pizza — à droite de la liste, contenue dans le cadre */}
+                {hasAsset("images/pizza.png") && (
+                  <div className="hidden xl:block absolute right-5 top-[56%] -translate-y-1/2 w-32 -rotate-6 pointer-events-none">
+                    <div className="relative aspect-square rounded-full overflow-hidden shadow-[0_14px_36px_-16px_rgba(42,33,26,0.8)]">
+                      <Image
+                        src="/images/pizza.png"
+                        alt="Pizza au four de La Barcarola"
+                        fill
+                        sizes="150px"
+                        className="object-cover scale-[1.08]"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </Reveal>
-            <Reveal delay={120} className="hidden lg:block lg:col-span-3">
-              <Placeholder
-                label="Affiche apéritif (artwork original)"
-                assetKey="affiche-aperitivo-2"
-                kicker="Affiche vintage"
-                ratio="3 / 5"
-              />
+
+            {/* Affiche droite */}
+            <Reveal delay={120} className="hidden lg:block group">
+              {hasAsset("images/affiche-cinzano.png") ? (
+                <Photo
+                  src="/images/affiche-cinzano.png"
+                  alt="Affiche vintage Cinzano"
+                  ratio="3 / 5"
+                  sizes="22vw"
+                  className="transition-transform duration-500 group-hover:-translate-y-1"
+                  imgClassName="transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+              ) : (
+                <Placeholder label="Affiche Cinzano" assetKey="affiche-cinzano" kicker="Affiche vintage" ratio="3 / 5" />
+              )}
             </Reveal>
           </div>
 
@@ -182,204 +210,164 @@ export default function Home() {
             <div className="text-center mt-12">
               <a
                 href="#carte"
-                className="link-u font-display text-xs font-bold uppercase tracking-[0.16em] text-rosso"
+                className="link-u group/link inline-flex items-center gap-1.5 font-display text-xs font-bold uppercase tracking-[0.16em] text-rosso"
               >
-                Voir la carte complète →
+                Voir la carte complète
+                <span className="inline-block transition-transform duration-300 group-hover/link:translate-x-1">→</span>
               </a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ============ LA MAISON ============ */}
-      <section id="chef" className="px-5 sm:px-8 py-24 sm:py-32 bg-paper border-y border-line">
-        <div className="mx-auto max-w-[1320px] grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-5">
-            <Reveal>
-              <div className="vintage-frame">
-                <Placeholder
-                  label="Les pâtes fraîches, en cuisine"
-                  assetKey="photo-cuisine-pates"
-                  ratio="4 / 5"
-                />
-              </div>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-7">
-            <Reveal delay={100}>
-              <span className="eyebrow">La maison</span>
-              <p className="display-lg text-ink mt-4">{chef.name}</p>
-              <p className="font-script text-2xl text-gold mt-1">{chef.role}</p>
-              <p className="mt-6 font-body text-lg text-ink-soft leading-relaxed max-w-xl">
-                {chef.bio}
-              </p>
+      {/* ============ LA MAISON + AMBIANCE (bande condensée) ============ */}
+      <section id="chef" className="bg-paper border-y border-line">
+        <div className="mx-auto max-w-[1320px] grid md:grid-cols-2 lg:grid-cols-4">
+          {/* La maison — texte */}
+          <Reveal className="flex flex-col justify-center p-8 lg:p-10 border-b md:border-b-0 md:border-r border-line">
+            <h2 className="display-md text-verde">La Maison</h2>
+            <p className="mt-4 font-body text-ink-soft leading-relaxed">
+              Ici, on cuisine comme là-bas. Des produits vrais, des recettes de
+              famille, et beaucoup de cœur. Benvenuti a casa.
+            </p>
+            <a
+              href="#carte"
+              className="link-u group/link mt-6 inline-flex items-center gap-1.5 font-display text-[0.72rem] font-bold uppercase tracking-[0.16em] text-rosso self-start"
+            >
+              En savoir plus
+              <span className="inline-block transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+            </a>
+          </Reveal>
 
-              <div className="mt-8">
-                <span className="font-display text-[0.62rem] font-bold uppercase tracking-[0.18em] text-rosso">
-                  Les incontournables
-                </span>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {signatures.map((d) => (
-                    <span
-                      key={d.id}
-                      className="font-body italic text-ink border border-line rounded-full px-4 py-1.5 bg-cream"
-                    >
-                      {d.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          </div>
+          {/* La maison — photo */}
+          <Reveal delay={80} className="group relative min-h-[280px] overflow-hidden border-b md:border-b-0 lg:border-r border-line">
+            {hasAsset("images/pates-fraiches.png") ? (
+              <Photo
+                src="/images/pates-fraiches.png"
+                alt="Les mains du chef façonnant les pâtes fraîches maison"
+                ratio="auto"
+                fill
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="absolute inset-0 h-full w-full"
+                imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            ) : (
+              <Placeholder label="Pâtes fraîches" assetKey="photo-cuisine-pates" className="absolute inset-0 h-full" />
+            )}
+          </Reveal>
+
+          {/* Ambiance — texte */}
+          <Reveal delay={120} id="ambiance" className="flex flex-col justify-center p-8 lg:p-10 border-b lg:border-b-0 md:border-r border-line">
+            <h2 className="display-md text-verde">Ambiance</h2>
+            <p className="mt-4 font-body text-ink-soft leading-relaxed">
+              Une trattoria de quartier, à l’italienne.
+            </p>
+            <a
+              href="#ambiance"
+              className="link-u group/link mt-6 inline-flex items-center gap-1.5 font-display text-[0.72rem] font-bold uppercase tracking-[0.16em] text-rosso self-start"
+            >
+              Voir la galerie
+              <span className="inline-block transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+            </a>
+          </Reveal>
+
+          {/* Ambiance — photo */}
+          <Reveal delay={160} className="group relative min-h-[280px] overflow-hidden">
+            {hasAsset("images/salle.png") ? (
+              <Photo
+                src="/images/salle.png"
+                alt="La salle intérieure aux affiches vintage et nappes vichy, lumière tamisée"
+                ratio="auto"
+                fill
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="absolute inset-0 h-full w-full"
+                imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+            ) : (
+              <Placeholder label="La salle" assetKey="photo-ambiance-1" className="absolute inset-0 h-full" />
+            )}
+          </Reveal>
         </div>
       </section>
 
-      {/* ============ AMBIANCE ============ */}
-      <section id="ambiance" className="px-5 sm:px-8 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1320px]">
+      {/* ============ RÉSERVATION + AVIS (bande rouge) ============ */}
+      <section id="reserver" className="bg-rosso text-cream">
+        <div className="mx-auto max-w-[1320px] px-5 sm:px-8 py-14 sm:py-16 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Réserver */}
           <Reveal>
-            <div className="flex items-baseline gap-4 mb-3">
-              <span className="eyebrow">02</span>
-              <h2 className="display-md text-ink">L’ambiance</h2>
-            </div>
-            <div className="rule-fancy mb-10">
-              <span>✦</span>
+            <h2 className="display-md text-cream">Réserver une table</h2>
+            <p className="mt-2 font-body text-cream/80">
+              En quelques secondes. Pour plus de 8 couverts, appelez-nous au {resto.phone}.
+            </p>
+            <div className="mt-6">
+              <Reserve />
             </div>
           </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {ambianceShots.map((shot, i) => (
-              <Reveal key={shot.key} delay={i * 50}>
-                <Placeholder
-                  label={shot.label}
-                  assetKey={shot.key}
-                  ratio={i % 5 === 0 ? "1 / 1.3" : "1 / 1"}
+
+          {/* Avis */}
+          <Reveal delay={120} id="avis">
+            <div className="flex items-start gap-6">
+              <div>
+                <span className="eyebrow text-cream/70">Avis clients</span>
+                <p className="font-display font-extrabold leading-none mt-2">
+                  <span className="text-5xl sm:text-6xl">9,4</span>
+                  <span className="text-2xl text-cream/70">/10</span>
+                </p>
+                <p className="mt-1 font-body text-cream/70">128 avis</p>
+              </div>
+              <div className="flex-1 border-l border-line-cream pl-6">
+                <p className="text-gold tracking-[0.2em]">★★★★★</p>
+                <blockquote className="mt-2 font-body text-lg italic leading-relaxed">
+                  « {featured.text} »
+                </blockquote>
+                <figcaption className="mt-3 font-display text-[0.62rem] font-bold uppercase tracking-[0.12em] text-cream/60">
+                  {featured.name} — via {featured.source}
+                </figcaption>
+              </div>
+              <div className="hidden sm:block shrink-0 self-center">
+                <CircularBadge
+                  top="Grazie · Mille"
+                  bottom="La Barcarola"
+                  center={<span className="font-display text-lg font-extrabold text-cream leading-none">1000</span>}
+                  size={92}
+                  color="var(--cream)"
+                  fontSize={7}
                 />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ RÉSERVATION (bloc verde) ============ */}
-      <section id="reserver" className="px-5 sm:px-8 py-24 sm:py-32 bg-verde text-cream">
-        <div className="mx-auto max-w-[1320px] grid lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-4">
-            <Reveal>
-              <span className="eyebrow text-gold">03 — Réservation</span>
-              <h2 className="display-lg mt-4">À tavola.</h2>
-              <p className="font-script text-2xl text-gold mt-1">On vous garde une table.</p>
-              <p className="mt-5 font-body text-cream/85 leading-relaxed">
-                Réservez en quelques secondes. Pour les groupes de plus de 8,
-                appelez-nous directement, on s’organise.
-              </p>
-              <dl className="mt-9 space-y-4">
-                {[
-                  ["Adresse", resto.address],
-                  ["Téléphone", resto.phone],
-                ].map(([k, v]) => (
-                  <div key={k} className="border-t border-line-cream pt-3">
-                    <dt className="font-display text-[0.6rem] font-bold uppercase tracking-[0.16em] text-cream/60">
-                      {k}
-                    </dt>
-                    <dd className="font-body text-cream mt-1">{v}</dd>
-                  </div>
-                ))}
-                <div className="border-t border-line-cream pt-3">
-                  <dt className="font-display text-[0.6rem] font-bold uppercase tracking-[0.16em] text-cream/60">
-                    Horaires
-                  </dt>
-                  <dd className="mt-2 space-y-1">
-                    {hours.map((h) => (
-                      <div
-                        key={h.day}
-                        className="flex justify-between font-body text-sm text-cream"
-                      >
-                        <span>{h.day}</span>
-                        <span className="text-cream/70">{h.value}</span>
-                      </div>
-                    ))}
-                  </dd>
-                </div>
-              </dl>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-8">
-            <Reveal delay={120}>
-              <ReservationForm />
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ AVIS ============ */}
-      <section id="avis" className="px-5 sm:px-8 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1320px]">
-          <Reveal>
-            <div className="flex flex-wrap items-baseline gap-4 mb-3">
-              <span className="eyebrow">04</span>
-              <h2 className="display-md text-ink">On en dit du bien</h2>
-              <span className="flex-1" />
-              <div className="stamp shrink-0">
-                <span>
-                  <b>9,4</b>
-                  <small>128 avis</small>
-                </span>
               </div>
             </div>
-            <div className="rule-fancy mb-10">
-              <span>✦</span>
-            </div>
           </Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((r, i) => (
-              <Reveal key={r.name} delay={i * 90}>
-                <figure className="vintage-frame h-full flex flex-col p-7">
-                  <span className="text-rosso tracking-[0.2em]">★★★★★</span>
-                  <blockquote className="mt-4 font-body text-lg text-ink leading-relaxed flex-1">
-                    « {r.text} »
-                  </blockquote>
-                  <figcaption className="mt-5 font-display text-[0.62rem] font-bold uppercase tracking-[0.12em] text-ink-soft">
-                    {r.name} — via {r.source}
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* ============ FOOTER ============ */}
-      <footer className="bg-ink text-cream px-5 sm:px-8 pt-16 pb-8">
-        <div className="mx-auto max-w-[1320px]">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-            <div>
-              <p className="font-script text-5xl text-cream leading-none">{resto.name}</p>
-              <p className="mt-3 font-body text-cream/70">
-                {resto.baseline} · {resto.address}
-              </p>
-            </div>
-            <a href="#reserver" className="btn self-start lg:self-auto">
-              Réserver une table
+      {/* ============ FOOTER mince ============ */}
+      <footer className="text-cream" style={{ backgroundColor: "#74201b" }}>
+        <div className="mx-auto max-w-[1320px] px-5 sm:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-display text-[0.66rem] font-bold uppercase tracking-[0.12em] text-cream/85 text-center sm:text-left">
+            {resto.name} — {resto.address} — {resto.phone}
+          </p>
+          <div className="flex items-center gap-4">
+            <a href="#top" aria-label="Instagram" className="text-cream/80 hover:text-cream hover:scale-110 transition-all duration-300">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            <a href="#top" aria-label="Facebook" className="text-cream/80 hover:text-cream hover:scale-110 transition-all duration-300">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 8.5h2V5.5h-2.2C11.4 5.5 10 7 10 9v1.5H8V13h2v6h3v-6h2.2l.3-2.5H13V9.3c0-.6.2-.8.8-.8Z" />
+              </svg>
             </a>
           </div>
-
-          <div className="mt-12 pt-6 border-t border-line-cream flex flex-col sm:flex-row gap-4 justify-between font-display text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-cream/55">
-            <span>
-              Refonte concept — proposition indépendante, non officielle et sans
-              affiliation avec l’établissement.
-            </span>
-            <span>
-              Conçu &amp; développé par{" "}
-              <a
-                href="https://lucasrblt.me"
-                className="link-u text-cream"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Lucas Rimbault
-              </a>
-            </span>
-          </div>
+        </div>
+        <div className="mx-auto max-w-[1320px] px-5 sm:px-8 pb-5 -mt-1">
+          <p className="font-display text-[0.56rem] font-semibold uppercase tracking-[0.12em] text-cream/45 text-center sm:text-left">
+            Refonte concept — proposition indépendante, non officielle. Conçu &amp; développé par{" "}
+            <a href="https://lucasrblt.me" target="_blank" rel="noopener noreferrer" className="link-u text-cream/70">
+              Lucas Rimbault
+            </a>
+            .
+          </p>
         </div>
       </footer>
     </div>

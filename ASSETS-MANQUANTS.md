@@ -1,68 +1,44 @@
-# Assets manquants — La Barcarola (refonte Osteria Vintage)
+# État des assets — La Barcarola (refonte Osteria Vintage)
 
-Le site est **fonctionnel mais sans photos** : tous les visuels ci-dessous sont
-actuellement rendus par des **placeholders tracés** (composant
-[`components/Placeholder.tsx`](components/Placeholder.tsx), classe `.ph`).
-Chaque placeholder porte une **clé d'asset** (attribut `data-asset`, visible à l'écran)
-qui correspond à une ligne de ce tableau.
+Toutes les photos de la mise en page actuelle sont **intégrées**. Le mécanisme : `app/page.tsx`
+teste la présence du fichier (`hasAsset(...)`) et affiche un `next/image`, sinon un
+`<Placeholder />` traçé (composant [`components/Placeholder.tsx`](components/Placeholder.tsx)).
+Pour remplacer/ajouter un visuel : déposer le fichier dans `public/images/` au nom attendu.
 
-➡️ **Quand une vraie image est fournie**, remplacer le `<Placeholder … />` correspondant
-dans `app/page.tsx` par un `next/image` (penser à configurer `next.config.ts` si l'image
-est distante). Conserver le ratio indiqué pour ne pas casser la mise en page.
+## 1. Photos intégrées (présentes dans `public/images/`)
 
-> Tant qu'aucune photo réelle n'est intégrée, le rendu reste « démo » : la qualité finale
-> dépend directement de ces visuels (idéalement un shooting pro plats + lieu).
+| Fichier | Emplacement | Contenu | Ratio d'affichage |
+|---|---|---|---|
+| `facade-terrasse.png` | Hero | Façade + terrasse, enseigne visible | plein cadre |
+| `pates-fraiches.png` | Bande « La Maison » | Pâtes fraîches en préparation (mains) | plein cadre |
+| `salle.png` | Bande « Ambiance » | La salle (affiches, nappes vichy) | plein cadre |
+| `affiche-campari.png` | Carte, colonne gauche | Affiche apéritif vintage (gauche) | 3 / 5 |
+| `affiche-cinzano.png` | Carte, colonne droite | Affiche apéritif vintage (droite) | 3 / 5 |
+| `pizza.png` | Carte, pastille dans le panneau central | Pizza au four (vue du dessus) | cercle |
+| `stamp-ouvert.png` | Hero | Tampon « Ouvert 7j/7 — tous les jours » | cercle |
 
-## 1. Photos (placeholders en place)
+> Qualité finale = qualité de ces visuels. Idéalement un shooting pro (plats + lieu),
+> lumière naturelle chaude, cadrages serrés sur la matière.
 
-| Clé (`data-asset`) | Emplacement | Ce que la photo doit montrer | Ratio | Format conseillé |
-|---|---|---|---|---|
-| `photo-facade` | Hero (`app/page.tsx`) | La façade + la terrasse, de jour, enseigne visible | 4 / 5 | ~1200×1500, WebP |
-| `photo-cuisine-pates` | Section « La maison » | Les pâtes fraîches en cours de préparation (mains, geste) | 4 / 5 | ~1200×1500, WebP |
-| `photo-ambiance-1` | Galerie ambiance | La salle | 1 / 1.3 | ~900×1170, WebP |
-| `photo-ambiance-2` | Galerie ambiance | La terrasse climatisée | 1 / 1 | ~900×900, WebP |
-| `photo-ambiance-3` | Galerie ambiance | Le four à pizza | 1 / 1 | ~900×900, WebP |
-| `photo-ambiance-4` | Galerie ambiance | Les pâtes fraîches (détail assiette) | 1 / 1 | ~900×900, WebP |
-| `photo-ambiance-5` | Galerie ambiance | Le comptoir | 1 / 1 | ~900×900, WebP |
-| `photo-ambiance-6` | Galerie ambiance | Le dressage / un plat signature | 1 / 1.3 | ~900×1170, WebP |
+## 2. Réellement absent / à fournir
 
-**Conseil shooting** : lumière naturelle chaude, fonds bois/nappe, cadrages serrés sur la
-matière (pâte, fromage filant, pizza au four). Prévoir aussi 3–5 photos de plats au cas où
-l'on voudrait illustrer la carte plus tard.
+| Élément | Où | État | Recommandation |
+|---|---|---|---|
+| **Image Open Graph** | `app/layout.tsx` (`metadata.openGraph.images`) | non définie | 1200×630, aperçu de partage (réseaux/SMS) |
+| **Favicon / icône d'app** | `app/icon.png` / `favicon.ico` | défaut Next | icône sur mesure (monogramme « LB » ou tampon) |
 
-## 2. Affiches apéritif de la carte (placeholders en place)
-
-La section « La Carte » encadre le menu de **deux affiches apéritif vintage**, comme sur la
-maquette. Ce sont des **placeholders** (`.ph`, kicker « Affiche vintage »).
-
-| Clé (`data-asset`) | Emplacement | Description | Ratio | Format conseillé |
-|---|---|---|---|---|
-| `affiche-aperitivo-1` | Carte, colonne gauche | Affiche apéritif vintage (gauche) | 3 / 5 | ~720×1200, PNG/WebP |
-| `affiche-aperitivo-2` | Carte, colonne droite | Affiche apéritif vintage (droite) | 3 / 5 | ~720×1200, PNG/WebP |
-
-> ⚠️ **À produire en artwork ORIGINAL** (voir §4). Ne **pas** réutiliser de vraies affiches
-> Campari / Cinzano (marques déposées).
-
-## 3. Décor & identité (rendus en CSS/SVG — upgrades optionnels)
-
-Ces éléments sont **déjà produits** dans le code (pas de placeholder gris), mais un·e
-graphiste pourrait les remplacer par des versions dessinées sur mesure pour gagner en finesse :
+## 3. Rendus en CSS/SVG — upgrades optionnels (pas de placeholder)
 
 | Élément | Où | État actuel | Upgrade possible |
 |---|---|---|---|
-| Tampon « Ouvert 7j/7 » | Hero | Sceau CSS (`.stamp`) | Tampon encré dessiné (effet usé) |
-| Sceau « Grazie » | Confirmation de réservation | Sceau CSS (`.stamp`) | Idem |
-| Tampon « 9,4 / 128 avis » | Section avis | Sceau CSS (`.stamp`) | Idem |
+| Tampon « Trattoria fresca » | Header (gauche) | Texte circulaire CSS (`CircularBadge`) | Estampille dessinée |
+| Badge « Grazie Mille / 1000 » | Section avis | Texte circulaire CSS (`CircularBadge`) | Estampille dessinée |
 | Icônes du bandeau (pizza, pâtes, halal, végé) | Bandeau rosso | SVG de trait inline | Pictos vintage dessinés |
-| Wordmark « La Barcarola » | Nav + footer | Police *Dancing Script* | Logo lettré sur mesure |
+| Wordmark « La Barcarola » | Header + footer | Police *Dancing Script* | Logo lettré sur mesure |
 
 ## 4. ⚠️ Propriété intellectuelle
 
-La maquette d'inspiration montrait des **affiches publicitaires Campari / Cinzano**.
-Les emplacements sont **reproduits** dans la carte, mais **uniquement sous forme de
-placeholders** (`affiche-aperitivo-1/2`) : aucune affiche de marque n'est intégrée.
-
-Campari, Cinzano (et autres) sont des **marques déposées** — reproduire leurs visuels sur
-le site commercial d'un établissement est risqué. Avant la mise en ligne, remplacer les
-placeholders par un **artwork ORIGINAL** dans l'esprit « affiche apéritif italienne »
-(création dédiée, non dérivée d'une marque existante).
+Les affiches **Campari** et **Cinzano** sont des **marques déposées**. Reproduire leurs visuels
+sur le site commercial d'un établissement est juridiquement risqué. Avant une mise en ligne
+commerciale, envisager de les remplacer par un **artwork ORIGINAL** dans l'esprit « affiche
+apéritif italienne » (création dédiée, non dérivée d'une marque existante).
